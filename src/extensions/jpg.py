@@ -13,21 +13,29 @@ from src.utils.config import logger
 from src.utils.utils import clean_str, is_unique_and_get_id
 
 
-def convert_jpeg_to_jpg(root, file_jpeg):
-    # Create the new file path with '.jpg' extension
-    file_jpg = os.path.splitext(file_jpeg)[0] + ".jpg"
-    jpeg_file_path = os.path.join(root, file_jpeg)
-    jpg_file_path = os.path.join(root, file_jpg)
+def move_jpeg_to_jpg(src_folder, dest_folder):
+    for root, _, files in os.walk(src_folder):
+        for file in files:
+            # Create the new file name with '.jpg' extension
+            file_jpg = os.path.splitext(file)[0] + ".jpg"
 
-    # Open the JPEG file and save it as a JPG file
-    with Image.open(jpeg_file_path) as img:
-        # Extract EXIF data
-        exif_data = img.info.get("exif")
+            # Create full paths for source and destination files
+            jpeg_file_path = os.path.join(root, file)
+            jpg_file_path = os.path.join(dest_folder, file_jpg)
 
-        # Save it as a JPG file with the same EXIF data
-        img.save(jpg_file_path, "JPEG", exif=exif_data)
+            # Ensure the destination folder exists
+            os.makedirs(dest_folder, exist_ok=True)
 
-    return jpg_file_path
+            # Open the JPEG file and save it as a JPG file in the destination folder
+            with Image.open(jpeg_file_path) as img:
+                # Extract EXIF data
+                exif_data = img.info.get("exif")
+
+                # Save it as a JPG file with the same EXIF data
+                img.save(jpg_file_path, "JPEG", exif=exif_data)
+
+            # Delete the original JPEG file
+            os.remove(jpeg_file_path)
 
 
 def set_up_jpg_grouped_by_date(src_folder):
