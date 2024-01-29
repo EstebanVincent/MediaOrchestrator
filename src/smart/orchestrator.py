@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from src.extensions.jpg import handle_jpg, move_jpeg_to_jpg
+from src.extensions.jpg import handle_jpg
 from src.utils.config import ALLOWED_EXTENSIONS, logger
 from src.utils.utils import get_file_extension
 
@@ -37,7 +37,8 @@ class MediaOrchestrator:
             extension = folder.split("\\")[-1]
             match extension:
                 case "jpeg":
-                    move_jpeg_to_jpg(src_folder=folder, dest_folder=self.silver_storage)
+                    pass
+                    # move_jpeg_to_jpg(src_folder=folder, dest_folder=self.silver_storage)
                 case "jpg":
                     handle_jpg(src_folder=folder, dest_folder=self.gold_storage)
                 case "png":

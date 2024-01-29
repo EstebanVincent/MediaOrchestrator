@@ -1,6 +1,7 @@
 import glob
 import hashlib
 import os
+from datetime import datetime
 
 
 def get_file_extension(file_name: str) -> str:
@@ -36,3 +37,19 @@ def get_decimal_from_dms(dms, ref) -> float:
     if ref in ["S", "W"]:
         decimal = -decimal
     return float(decimal)
+
+
+def get_datetime(date_str):
+    # Assuming the format is "%Y:%m:%d %H:%M:%S"
+    dt = datetime.strptime(date_str, "%Y:%m:%d %H:%M:%S")
+    return dt.year, dt.month, dt.day, dt.hour, dt.minute
+
+
+def get_gps_from_exif(
+    gps_latitude, gps_latitude_ref, gps_longitude, gps_longitude_ref
+) -> tuple[float, float]:
+    if gps_latitude and gps_longitude and gps_latitude_ref and gps_longitude_ref:
+        latitude = get_decimal_from_dms(gps_latitude, gps_latitude_ref)
+        longitude = get_decimal_from_dms(gps_longitude, gps_longitude_ref)
+        return latitude, longitude
+    return None, None
